@@ -1,17 +1,17 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 const data = [
-  { name: "Pending", value: 28, color: "hsl(38, 92%, 50%)" },
-  { name: "In Progress", value: 15, color: "hsl(199, 89%, 48%)" },
-  { name: "Resolved", value: 45, color: "hsl(142, 70%, 45%)" },
-  { name: "Rejected", value: 12, color: "hsl(0, 62%, 50%)" },
+  { name: "Pending", value: 28, color: "#B45309" },
+  { name: "In Progress", value: 15, color: "#0369A1" },
+  { name: "Resolved", value: 45, color: "#15803D" },
+  { name: "Rejected", value: 12, color: "#B91C1C" },
 ];
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="glass-card p-3 border border-border/50">
-        <p className="text-sm font-medium text-foreground">{payload[0].name}</p>
+      <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+        <p className="text-sm font-medium text-gray-800">{payload[0].name}</p>
         <p className="text-sm" style={{ color: payload[0].payload.color }}>
           {payload[0].value} complaints ({Math.round((payload[0].value / 100) * 100)}%)
         </p>
@@ -30,7 +30,7 @@ const CustomLegend = ({ payload }: any) => {
             className="w-3 h-3 rounded-full" 
             style={{ backgroundColor: entry.color }}
           />
-          <span className="text-sm text-muted-foreground">{entry.value}</span>
+          <span className="text-sm text-gray-600">{entry.value}</span>
         </div>
       ))}
     </div>
@@ -39,8 +39,8 @@ const CustomLegend = ({ payload }: any) => {
 
 const StatusPieChart = () => {
   return (
-    <div className="glass-card p-6">
-      <h3 className="text-lg font-semibold text-foreground mb-4">Complaint Status Distribution</h3>
+    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">Complaint Status Distribution</h3>
       
       <div className="h-[280px]">
         <ResponsiveContainer width="100%" height="100%">

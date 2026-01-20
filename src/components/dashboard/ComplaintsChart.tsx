@@ -18,9 +18,9 @@ const data = [
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="glass-card p-3 border border-border/50">
-        <p className="text-sm font-medium text-foreground">{label}</p>
-        <p className="text-sm text-primary">
+      <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+        <p className="text-sm font-medium text-gray-800">{label}</p>
+        <p className="text-sm text-blue-600">
           {payload[0].value} complaints
         </p>
       </div>
@@ -31,10 +31,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 const ComplaintsChart = () => {
   return (
-    <div className="glass-card p-6">
+    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-foreground">Monthly Complaints Report</h3>
-        <select className="bg-secondary/50 border border-border/50 rounded-lg px-3 py-1.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/50">
+        <h3 className="text-lg font-semibold text-gray-800">Monthly Complaints Report</h3>
+        <select className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-blue-500">
           <option>2024</option>
           <option>2023</option>
         </select>
@@ -43,22 +43,22 @@ const ComplaintsChart = () => {
       <div className="h-[280px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" opacity={0.5} />
             <XAxis 
               dataKey="month" 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              tick={{ fill: '#6B7280', fontSize: 12 }}
             />
             <YAxis 
               axisLine={false}
               tickLine={false}
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
+              tick={{ fill: '#6B7280', fontSize: 12 }}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'hsl(var(--primary) / 0.1)' }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
             <Bar 
               dataKey="complaints" 
-              fill="hsl(var(--primary))" 
+              fill="#1E40AF"
               radius={[4, 4, 0, 0]}
               maxBarSize={40}
             />
