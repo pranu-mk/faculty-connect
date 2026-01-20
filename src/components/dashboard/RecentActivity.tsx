@@ -1,5 +1,4 @@
 import { Clock, AlertCircle, CheckCircle, FileText, Bell } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface Activity {
   id: string;
@@ -7,6 +6,10 @@ interface Activity {
   title: string;
   description: string;
   time: string;
+}
+
+interface RecentActivityProps {
+  theme?: "dark" | "light" | "fancy";
 }
 
 const activities: Activity[] = [
@@ -54,19 +57,27 @@ const iconMap = {
   resolved: CheckCircle,
 };
 
-const badgeMap = {
-  assigned: "bg-info/20 text-info border-info/30",
-  updated: "bg-primary/20 text-primary border-primary/30",
-  alert: "bg-warning/20 text-warning border-warning/30",
-  resolved: "bg-success/20 text-success border-success/30",
+const colorMap = {
+  assigned: { bg: "#0C4A6E", icon: "#0EA5E9" },
+  updated: { bg: "#1E1B4B", icon: "#6366F1" },
+  alert: { bg: "#3B2F0B", icon: "#F59E0B" },
+  resolved: { bg: "#052E16", icon: "#22C55E" },
 };
 
-const RecentActivity = () => {
+const RecentActivity = ({ theme = "dark" }: RecentActivityProps) => {
   return (
-    <div className="glass-card p-6">
+    <div 
+      className="rounded-xl p-6 border"
+      style={{ 
+        backgroundColor: theme === "light" ? "#F8FAFC" : "#1E1B4B",
+        borderColor: theme === "light" ? "#E2E8F0" : "#1F2937"
+      }}
+    >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-foreground">Recent Activity</h3>
-        <button className="text-sm text-primary hover:text-primary/80 transition-colors">
+        <h3 className="text-lg font-semibold" style={{ color: theme === "light" ? "#1F2937" : "#FFFFFF" }}>
+          Recent Activity
+        </h3>
+        <button className="text-sm text-blue-500 hover:text-blue-400 transition-colors">
           View All
         </button>
       </div>
@@ -74,22 +85,30 @@ const RecentActivity = () => {
       <div className="space-y-4">
         {activities.map((activity, index) => {
           const Icon = iconMap[activity.type];
+          const colors = colorMap[activity.type];
           return (
             <div 
               key={activity.id} 
-              className="flex items-start gap-4 p-3 rounded-lg hover:bg-secondary/30 transition-colors animate-fade-in"
+              className="flex items-start gap-4 p-3 rounded-lg transition-colors animate-fade-in hover:bg-white/5"
               style={{ animationDelay: `${index * 50}ms` }}
             >
-              <div className={`p-2 rounded-lg ${badgeMap[activity.type].replace('text-', 'bg-').split(' ')[0]}`}>
-                <Icon className={`w-4 h-4 ${badgeMap[activity.type].split(' ')[1]}`} />
+              <div 
+                className="p-2 rounded-lg"
+                style={{ backgroundColor: colors.bg }}
+              >
+                <Icon className="w-4 h-4" style={{ color: colors.icon }} />
               </div>
               
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground">{activity.title}</p>
-                <p className="text-sm text-muted-foreground truncate">{activity.description}</p>
+                <p className="text-sm font-medium" style={{ color: theme === "light" ? "#1F2937" : "#FFFFFF" }}>
+                  {activity.title}
+                </p>
+                <p className="text-sm truncate" style={{ color: theme === "light" ? "#6B7280" : "#9CA3AF" }}>
+                  {activity.description}
+                </p>
               </div>
               
-              <div className="flex items-center gap-1 text-xs text-muted-foreground whitespace-nowrap">
+              <div className="flex items-center gap-1 text-xs whitespace-nowrap" style={{ color: theme === "light" ? "#9CA3AF" : "#6B7280" }}>
                 <Clock className="w-3 h-3" />
                 {activity.time}
               </div>
