@@ -1,4 +1,5 @@
 import { Clock, AlertCircle, CheckCircle, FileText, Bell } from "lucide-react";
+import type { Theme } from "@/pages/Index";
 
 interface Activity {
   id: string;
@@ -9,7 +10,7 @@ interface Activity {
 }
 
 interface RecentActivityProps {
-  theme?: "dark" | "light" | "fancy";
+  theme?: Theme;
 }
 
 const activities: Activity[] = [
@@ -57,27 +58,41 @@ const iconMap = {
   resolved: CheckCircle,
 };
 
-const colorMap = {
-  assigned: { bg: "#0C4A6E", icon: "#0EA5E9" },
-  updated: { bg: "#1E1B4B", icon: "#6366F1" },
-  alert: { bg: "#3B2F0B", icon: "#F59E0B" },
-  resolved: { bg: "#052E16", icon: "#22C55E" },
+// Softer icon colors
+const getColorMap = (theme: Theme) => {
+  if (theme === "light") {
+    return {
+      assigned: { bg: "#EFF6FF", icon: "#3B82F6" },
+      updated: { bg: "#EEF2FF", icon: "#6366F1" },
+      alert: { bg: "#FFFBEB", icon: "#D97706" },
+      resolved: { bg: "#ECFDF5", icon: "#10B981" },
+    };
+  }
+  return {
+    assigned: { bg: "rgba(59, 130, 246, 0.15)", icon: "#3B82F6" },
+    updated: { bg: "rgba(99, 102, 241, 0.15)", icon: "#6366F1" },
+    alert: { bg: "rgba(217, 119, 6, 0.15)", icon: "#D97706" },
+    resolved: { bg: "rgba(16, 185, 129, 0.15)", icon: "#10B981" },
+  };
 };
 
 const RecentActivity = ({ theme = "dark" }: RecentActivityProps) => {
+  const colorMap = getColorMap(theme);
+  const isLight = theme === "light";
+
   return (
     <div 
       className="rounded-xl p-6 border"
       style={{ 
-        backgroundColor: theme === "light" ? "#F8FAFC" : "#1E1B4B",
-        borderColor: theme === "light" ? "#E2E8F0" : "#1F2937"
+        backgroundColor: isLight ? "#FFFFFF" : "#FFFFFF",
+        borderColor: "#E5E7EB"
       }}
     >
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold" style={{ color: theme === "light" ? "#1F2937" : "#FFFFFF" }}>
+        <h3 className="text-lg font-semibold text-gray-800">
           Recent Activity
         </h3>
-        <button className="text-sm text-blue-500 hover:text-blue-400 transition-colors">
+        <button className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
           View All
         </button>
       </div>
@@ -89,7 +104,7 @@ const RecentActivity = ({ theme = "dark" }: RecentActivityProps) => {
           return (
             <div 
               key={activity.id} 
-              className="flex items-start gap-4 p-3 rounded-lg transition-colors animate-fade-in hover:bg-white/5"
+              className="flex items-start gap-4 p-3 rounded-lg transition-colors animate-fade-in hover:bg-gray-50"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               <div 
@@ -100,15 +115,15 @@ const RecentActivity = ({ theme = "dark" }: RecentActivityProps) => {
               </div>
               
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium" style={{ color: theme === "light" ? "#1F2937" : "#FFFFFF" }}>
+                <p className="text-sm font-medium text-gray-800">
                   {activity.title}
                 </p>
-                <p className="text-sm truncate" style={{ color: theme === "light" ? "#6B7280" : "#9CA3AF" }}>
+                <p className="text-sm truncate text-gray-500">
                   {activity.description}
                 </p>
               </div>
               
-              <div className="flex items-center gap-1 text-xs whitespace-nowrap" style={{ color: theme === "light" ? "#9CA3AF" : "#6B7280" }}>
+              <div className="flex items-center gap-1 text-xs whitespace-nowrap text-gray-400">
                 <Clock className="w-3 h-3" />
                 {activity.time}
               </div>

@@ -9,27 +9,28 @@ import Notices from "@/pages/Notices";
 import Students from "@/pages/Students";
 import Profile from "@/pages/Profile";
 
+export type Theme = "dark" | "light" | "fancy";
+
 const Index = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [theme, setTheme] = useState<"dark" | "light" | "fancy">("dark");
-  const [sidebarWidth, setSidebarWidth] = useState(250);
+  const [theme, setTheme] = useState<Theme>("dark");
 
   const renderContent = () => {
     switch (activeTab) {
       case "dashboard":
         return <Dashboard theme={theme} />;
       case "complaints":
-        return <Complaints />;
+        return <Complaints theme={theme} />;
       case "helpdesk":
-        return <Helpdesk />;
+        return <Helpdesk theme={theme} />;
       case "events":
-        return <Events />;
+        return <Events theme={theme} />;
       case "notices":
-        return <Notices />;
+        return <Notices theme={theme} />;
       case "students":
-        return <Students />;
+        return <Students theme={theme} />;
       case "profile":
-        return <Profile />;
+        return <Profile theme={theme} />;
       default:
         return <Dashboard theme={theme} />;
     }
@@ -40,6 +41,7 @@ const Index = () => {
       <Sidebar 
         activeTab={activeTab} 
         onTabChange={setActiveTab}
+        theme={theme}
       />
       <div className="flex-1 ml-[250px] transition-all duration-300" style={{ marginLeft: "250px" }}>
         <TopHeader theme={theme} onThemeChange={setTheme} />

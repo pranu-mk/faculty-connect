@@ -118,7 +118,11 @@ const statusColors = {
   Completed: { bg: "#1F2937", text: "#9CA3AF", border: "#6B7280" },
 };
 
-const Events = () => {
+interface EventsProps {
+  theme?: "dark" | "light" | "fancy";
+}
+
+const Events = ({ theme = "dark" }: EventsProps) => {
   const { toast } = useToast();
   const [eventList, setEventList] = useState(initialEvents);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);

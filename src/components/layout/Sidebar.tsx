@@ -12,10 +12,12 @@ import {
   ChevronRight
 } from "lucide-react";
 import LogoutModal from "@/components/modals/LogoutModal";
+import type { Theme } from "@/pages/Index";
 
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  theme: Theme;
 }
 
 const menuItems = [
@@ -27,9 +29,41 @@ const menuItems = [
   { id: "students", label: "Students", icon: Users },
 ];
 
-const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
+// Theme-based sidebar colors
+const getSidebarColors = (theme: Theme) => {
+  if (theme === "light") {
+    return {
+      bg: "#4A3728", // Slightly lighter dark brown-orange
+      border: "#6B4F3A",
+      text: "#FFF7ED",
+      icon: "#FBBF24", // Yellow icon
+      hoverBg: "#5C4633",
+      hoverText: "#FEF3C7",
+      activeBg: "#D97706", // Orange active
+      activeText: "#FFFFFF",
+      activeIcon: "#FFFFFF",
+      toggleBg: "#6B4F3A",
+    };
+  }
+  // Dark and Fancy themes use the same orange-yellow dark professional tone
+  return {
+    bg: "#3D2914", // Dark orange-brown base
+    border: "#5C4020", // Muted yellow-brown border
+    text: "#FFF7ED",
+    icon: "#FBBF24", // Yellow icon
+    hoverBg: "#4A3520",
+    hoverText: "#FEF3C7",
+    activeBg: "#D97706", // Orange active
+    activeText: "#FFFFFF",
+    activeIcon: "#FFFFFF",
+    toggleBg: "#5C4020",
+  };
+};
+
+const Sidebar = ({ activeTab, onTabChange, theme }: SidebarProps) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const colors = getSidebarColors(theme);
 
   return (
     <>
@@ -38,27 +72,27 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
           isCollapsed ? "w-[70px]" : "w-[250px]"
         }`}
         style={{ 
-          backgroundColor: "#2B1E14",
-          borderRight: "1px solid #4B2E1A"
+          backgroundColor: colors.bg,
+          borderRight: `1px solid ${colors.border}`
         }}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between h-16 px-4 border-b" style={{ borderColor: "#4B2E1A" }}>
+        <div className="flex items-center justify-between h-16 px-4 border-b" style={{ borderColor: colors.border }}>
           {!isCollapsed && (
             <div className="flex items-center gap-3">
               <div 
                 className="w-9 h-9 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: "#1D4ED8" }}
+                style={{ backgroundColor: colors.activeBg }}
               >
                 <span className="text-white font-bold text-lg">F</span>
               </div>
-              <span className="text-lg font-semibold" style={{ color: "#FFF7ED" }}>Faculty Panel</span>
+              <span className="text-lg font-semibold" style={{ color: colors.text }}>Faculty Panel</span>
             </div>
           )}
           {isCollapsed && (
             <div 
               className="w-9 h-9 rounded-lg flex items-center justify-center mx-auto"
-              style={{ backgroundColor: "#1D4ED8" }}
+              style={{ backgroundColor: colors.activeBg }}
             >
               <span className="text-white font-bold text-lg">F</span>
             </div>
@@ -70,8 +104,8 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="absolute -right-3 top-20 w-6 h-6 rounded-full flex items-center justify-center transition-colors"
           style={{ 
-            backgroundColor: "#4B2E1A",
-            color: "#FFF7ED"
+            backgroundColor: colors.toggleBg,
+            color: colors.text
           }}
         >
           {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -91,25 +125,25 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
                   isCollapsed ? "justify-center" : ""
                 }`}
                 style={{
-                  backgroundColor: isActive ? "#1D4ED8" : "transparent",
-                  color: isActive ? "#FFFFFF" : "#FFF7ED",
+                  backgroundColor: isActive ? colors.activeBg : "transparent",
+                  color: isActive ? colors.activeText : colors.text,
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.backgroundColor = "#3A2618";
-                    e.currentTarget.style.color = "#BFDBFE";
+                    e.currentTarget.style.backgroundColor = colors.hoverBg;
+                    e.currentTarget.style.color = colors.hoverText;
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.backgroundColor = "transparent";
-                    e.currentTarget.style.color = "#FFF7ED";
+                    e.currentTarget.style.color = colors.text;
                   }
                 }}
               >
                 <Icon 
                   className="w-5 h-5 flex-shrink-0" 
-                  style={{ color: isActive ? "#FFFFFF" : "#93C5FD" }}
+                  style={{ color: isActive ? colors.activeIcon : colors.icon }}
                 />
                 {!isCollapsed && (
                   <span className="font-medium text-sm">{item.label}</span>
@@ -120,32 +154,32 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
         </nav>
 
         {/* Bottom Section */}
-        <div className="p-3 space-y-1 border-t" style={{ borderColor: "#4B2E1A" }}>
+        <div className="p-3 space-y-1 border-t" style={{ borderColor: colors.border }}>
           <button
             onClick={() => onTabChange("profile")}
             className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
               isCollapsed ? "justify-center" : ""
             }`}
             style={{
-              backgroundColor: activeTab === "profile" ? "#1D4ED8" : "transparent",
-              color: activeTab === "profile" ? "#FFFFFF" : "#FFF7ED",
+              backgroundColor: activeTab === "profile" ? colors.activeBg : "transparent",
+              color: activeTab === "profile" ? colors.activeText : colors.text,
             }}
             onMouseEnter={(e) => {
               if (activeTab !== "profile") {
-                e.currentTarget.style.backgroundColor = "#3A2618";
-                e.currentTarget.style.color = "#BFDBFE";
+                e.currentTarget.style.backgroundColor = colors.hoverBg;
+                e.currentTarget.style.color = colors.hoverText;
               }
             }}
             onMouseLeave={(e) => {
               if (activeTab !== "profile") {
                 e.currentTarget.style.backgroundColor = "transparent";
-                e.currentTarget.style.color = "#FFF7ED";
+                e.currentTarget.style.color = colors.text;
               }
             }}
           >
             <User 
               className="w-5 h-5 flex-shrink-0" 
-              style={{ color: activeTab === "profile" ? "#FFFFFF" : "#93C5FD" }}
+              style={{ color: activeTab === "profile" ? colors.activeIcon : colors.icon }}
             />
             {!isCollapsed && <span className="font-medium text-sm">Profile</span>}
           </button>
@@ -155,17 +189,17 @@ const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
             className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
               isCollapsed ? "justify-center" : ""
             }`}
-            style={{ color: "#FFF7ED" }}
+            style={{ color: colors.text }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#3A2618";
-              e.currentTarget.style.color = "#BFDBFE";
+              e.currentTarget.style.backgroundColor = colors.hoverBg;
+              e.currentTarget.style.color = colors.hoverText;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = "transparent";
-              e.currentTarget.style.color = "#FFF7ED";
+              e.currentTarget.style.color = colors.text;
             }}
           >
-            <LogOut className="w-5 h-5 flex-shrink-0" style={{ color: "#93C5FD" }} />
+            <LogOut className="w-5 h-5 flex-shrink-0" style={{ color: colors.icon }} />
             {!isCollapsed && <span className="font-medium text-sm">Logout</span>}
           </button>
         </div>

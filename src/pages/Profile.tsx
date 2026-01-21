@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import type { Theme } from "@/pages/Index";
 
 interface FacultyProfile {
   fullName: string;
@@ -23,7 +24,11 @@ interface FacultyProfile {
   photo: string;
 }
 
-const Profile = () => {
+interface ProfileProps {
+  theme?: Theme;
+}
+
+const Profile = ({ theme = "dark" }: ProfileProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -105,9 +110,9 @@ const Profile = () => {
           {/* Avatar Section */}
           <div className="flex flex-col items-center gap-4">
             <div className="relative group">
-              <Avatar className="w-32 h-32 border-4 border-purple-200">
+              <Avatar className="w-32 h-32 border-4 border-blue-200">
                 <AvatarImage src={profile.photo} />
-                <AvatarFallback className="bg-purple-100 text-purple-600 text-3xl font-bold">
+                <AvatarFallback className="bg-blue-100 text-blue-600 text-3xl font-bold">
                   {profile.fullName.split(" ").map(n => n[0]).join("")}
                 </AvatarFallback>
               </Avatar>
@@ -120,7 +125,7 @@ const Profile = () => {
               />
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute bottom-0 right-0 p-2 rounded-full bg-purple-600 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute bottom-0 right-0 p-2 rounded-full bg-blue-600 text-white opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 <Camera className="w-4 h-4" />
               </button>
@@ -129,7 +134,7 @@ const Profile = () => {
               variant="outline" 
               size="sm" 
               onClick={() => fileInputRef.current?.click()}
-              className="border-purple-200 text-purple-600 hover:bg-purple-50"
+              className="border-blue-200 text-blue-600 hover:bg-blue-50"
             >
               <Upload className="w-4 h-4 mr-2" />
               Upload Photo
@@ -164,7 +169,7 @@ const Profile = () => {
                   <BadgeCheck className="w-4 h-4" />
                   Faculty ID
                 </label>
-                <p className="text-lg font-mono text-purple-600">{profile.facultyId}</p>
+                <p className="text-lg font-mono text-blue-600">{profile.facultyId}</p>
               </div>
 
               <div className="space-y-2">
@@ -256,7 +261,7 @@ const Profile = () => {
                 Cancel
               </Button>
               <Button 
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
                 onClick={handleSave}
               >
                 <Save className="w-4 h-4 mr-2" />
@@ -313,7 +318,7 @@ const Profile = () => {
                   />
                 </div>
                 <Button 
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white" 
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white" 
                   onClick={handlePasswordChange}
                 >
                   Update Password
@@ -332,7 +337,7 @@ const Profile = () => {
             { label: "Complaints Resolved", value: 82, color: "text-green-600", bg: "bg-green-50" },
             { label: "Pending Review", value: 12, color: "text-yellow-600", bg: "bg-yellow-50" },
             { label: "Avg. Resolution Time", value: "2.5 days", color: "text-blue-600", bg: "bg-blue-50" },
-            { label: "Rating", value: "4.8/5", color: "text-purple-600", bg: "bg-purple-50" },
+            { label: "Rating", value: "4.8/5", color: "text-indigo-600", bg: "bg-indigo-50" },
           ].map((stat, index) => (
             <div key={index} className={`p-4 rounded-lg ${stat.bg} text-center`}>
               <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>

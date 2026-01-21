@@ -138,7 +138,11 @@ const statusColors = {
 
 const ITEMS_PER_PAGE = 5;
 
-const Students = () => {
+interface StudentsProps {
+  theme?: "dark" | "light" | "fancy";
+}
+
+const Students = ({ theme = "dark" }: StudentsProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [departmentFilter, setDepartmentFilter] = useState("all");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
