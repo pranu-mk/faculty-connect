@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import type { Theme } from "@/pages/Index";
 
 interface Reply {
   id: string;
@@ -36,6 +37,10 @@ interface Ticket {
   status: "Open" | "In Progress" | "Resolved" | "Closed";
   lastReply: string;
   replies: Reply[];
+}
+
+interface HelpdeskProps {
+  theme?: Theme;
 }
 
 const initialTickets: Ticket[] = [
@@ -96,20 +101,21 @@ const initialTickets: Ticket[] = [
   },
 ];
 
+// Softer badge colors
 const statusColors = {
-  Open: { bg: "#3B2F0B", text: "#F59E0B", border: "#D97706" },
-  "In Progress": { bg: "#0C4A6E", text: "#0EA5E9", border: "#0284C7" },
-  Resolved: { bg: "#052E16", text: "#22C55E", border: "#16A34A" },
-  Closed: { bg: "#1F2937", text: "#9CA3AF", border: "#6B7280" },
+  Open: { bg: "#FFFBEB", text: "#D97706", border: "#FCD34D" },
+  "In Progress": { bg: "#EFF6FF", text: "#2563EB", border: "#93C5FD" },
+  Resolved: { bg: "#ECFDF5", text: "#059669", border: "#6EE7B7" },
+  Closed: { bg: "#F3F4F6", text: "#6B7280", border: "#D1D5DB" },
 };
 
 const priorityColors = {
-  Low: { bg: "#052E16", text: "#22C55E", border: "#16A34A" },
-  Medium: { bg: "#3B2F0B", text: "#F59E0B", border: "#D97706" },
-  High: { bg: "#3F0D0D", text: "#EF4444", border: "#DC2626" },
+  Low: { bg: "#ECFDF5", text: "#059669", border: "#6EE7B7" },
+  Medium: { bg: "#FFFBEB", text: "#D97706", border: "#FCD34D" },
+  High: { bg: "#FEF2F2", text: "#DC2626", border: "#FCA5A5" },
 };
 
-const Helpdesk = () => {
+const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
   const [tickets, setTickets] = useState(initialTickets);
   const [searchTerm, setSearchTerm] = useState("");
   const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);
@@ -167,7 +173,7 @@ const Helpdesk = () => {
         </div>
         <Dialog open={isNewTicketOpen} onOpenChange={setIsNewTicketOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-purple-600 hover:bg-purple-700 text-white">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
               <Plus className="w-4 h-4 mr-2" />
               New Ticket
             </Button>
@@ -219,7 +225,7 @@ const Helpdesk = () => {
                 <Button variant="outline" className="flex-1 border-gray-200" onClick={() => setIsNewTicketOpen(false)}>
                   Cancel
                 </Button>
-                <Button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white" onClick={handleCreateTicket}>
+                <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white" onClick={handleCreateTicket}>
                   Submit Ticket
                 </Button>
               </div>
@@ -287,7 +293,8 @@ const Helpdesk = () => {
                 </div>
                 <Button 
                   size="sm" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  variant="outline"
+                  className="border-blue-200 text-blue-600 hover:bg-blue-50"
                   onClick={() => setReplyTicket(ticket)}
                 >
                   <MessageSquare className="w-4 h-4 mr-1" />

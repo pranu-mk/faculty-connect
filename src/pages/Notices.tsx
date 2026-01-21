@@ -48,7 +48,11 @@ const typeColors = {
   Meeting: { bg: "#052E16", text: "#22C55E", border: "#16A34A" },
 };
 
-const Notices = () => {
+interface NoticesProps {
+  theme?: "dark" | "light" | "fancy";
+}
+
+const Notices = ({ theme = "dark" }: NoticesProps) => {
   const [notices, setNotices] = useState(initialNotices);
   const [searchTerm, setSearchTerm] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("all");

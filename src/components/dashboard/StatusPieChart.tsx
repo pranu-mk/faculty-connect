@@ -1,11 +1,17 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import type { Theme } from "@/pages/Index";
 
+// Softer, more professional chart colors
 const data = [
-  { name: "Pending", value: 28, color: "#B45309" },
-  { name: "In Progress", value: 15, color: "#0369A1" },
-  { name: "Resolved", value: 45, color: "#15803D" },
-  { name: "Rejected", value: 12, color: "#B91C1C" },
+  { name: "Pending", value: 28, color: "#D97706" },
+  { name: "In Progress", value: 15, color: "#3B82F6" },
+  { name: "Resolved", value: 45, color: "#10B981" },
+  { name: "Rejected", value: 12, color: "#EF4444" },
 ];
+
+interface StatusPieChartProps {
+  theme?: Theme;
+}
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -37,7 +43,7 @@ const CustomLegend = ({ payload }: any) => {
   );
 };
 
-const StatusPieChart = () => {
+const StatusPieChart = ({ theme = "dark" }: StatusPieChartProps) => {
   return (
     <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-800 mb-4">Complaint Status Distribution</h3>

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Search, Eye, Edit, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Eye, Edit, ChevronLeft, ChevronRight, MessageSquare, Flag, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import ComplaintDetailModal from "@/components/modals/ComplaintDetailModal";
+import type { Theme } from "@/pages/Index";
 
 interface Complaint {
   id: string;
@@ -27,6 +29,10 @@ interface Complaint {
   priority: "Low" | "Medium" | "High";
   date: string;
   status: "Pending" | "In Progress" | "Resolved" | "Rejected";
+}
+
+interface ComplaintsProps {
+  theme?: Theme;
 }
 
 const initialComplaints: Complaint[] = [
@@ -40,22 +46,23 @@ const initialComplaints: Complaint[] = [
   { id: "CMP-1238", studentName: "Meera Joshi", department: "Computer Science", type: "Hostel Facility", priority: "Medium", date: "2024-01-12", status: "Resolved" },
 ];
 
+// Softer, faint badge colors
 const priorityColors = {
-  Low: { bg: "#052E16", text: "#22C55E", border: "#16A34A" },
-  Medium: { bg: "#3B2F0B", text: "#F59E0B", border: "#D97706" },
-  High: { bg: "#3F0D0D", text: "#EF4444", border: "#DC2626" },
+  Low: { bg: "#ECFDF5", text: "#059669", border: "#6EE7B7" },
+  Medium: { bg: "#FFFBEB", text: "#D97706", border: "#FCD34D" },
+  High: { bg: "#FEF2F2", text: "#DC2626", border: "#FCA5A5" },
 };
 
 const statusColors = {
-  Pending: { bg: "#3B2F0B", text: "#F59E0B", border: "#D97706" },
-  "In Progress": { bg: "#0C4A6E", text: "#0EA5E9", border: "#0284C7" },
-  Resolved: { bg: "#052E16", text: "#22C55E", border: "#16A34A" },
-  Rejected: { bg: "#3F0D0D", text: "#EF4444", border: "#DC2626" },
+  Pending: { bg: "#FFFBEB", text: "#D97706", border: "#FCD34D" },
+  "In Progress": { bg: "#EFF6FF", text: "#2563EB", border: "#93C5FD" },
+  Resolved: { bg: "#ECFDF5", text: "#059669", border: "#6EE7B7" },
+  Rejected: { bg: "#FEF2F2", text: "#DC2626", border: "#FCA5A5" },
 };
 
 const ITEMS_PER_PAGE = 5;
 
-const Complaints = () => {
+const Complaints = ({ theme = "dark" }: ComplaintsProps) => {
   const [complaints, setComplaints] = useState(initialComplaints);
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [editingComplaint, setEditingComplaint] = useState<Complaint | null>(null);
@@ -150,7 +157,7 @@ const Complaints = () => {
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table - Pure white background */}
       <div className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -167,7 +174,7 @@ const Complaints = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedComplaints.map((complaint, index) => (
+              {paginatedComplaints.map((complaint) => (
                 <tr 
                   key={complaint.id}
                   className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
@@ -205,16 +212,16 @@ const Complaints = () => {
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 p-0 hover:bg-blue-100 text-blue-600"
+                        variant="outline"
+                        className="h-8 px-2 border-gray-200 hover:bg-blue-50 text-blue-600 hover:text-blue-700"
                         onClick={() => setSelectedComplaint(complaint)}
                       >
                         <Eye className="w-4 h-4" />
                       </Button>
                       <Button
                         size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 p-0 hover:bg-purple-100 text-purple-600"
+                        variant="outline"
+                        className="h-8 px-2 border-gray-200 hover:bg-purple-50 text-purple-600 hover:text-purple-700"
                         onClick={() => setEditingComplaint(complaint)}
                       >
                         <Edit className="w-4 h-4" />
@@ -327,7 +334,7 @@ const Complaints = () => {
                   Cancel
                 </Button>
                 <Button 
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                   onClick={handleEditSave}
                 >
                   Save Changes

@@ -3,12 +3,15 @@ import StatCard from "@/components/dashboard/StatCard";
 import RecentActivity from "@/components/dashboard/RecentActivity";
 import ComplaintsChart from "@/components/dashboard/ComplaintsChart";
 import StatusPieChart from "@/components/dashboard/StatusPieChart";
+import type { Theme } from "@/pages/Index";
 
 interface DashboardProps {
-  theme?: "dark" | "light" | "fancy";
+  theme?: Theme;
 }
 
 const Dashboard = ({ theme = "dark" }: DashboardProps) => {
+  const isLight = theme === "light";
+
   return (
     <div className="page-enter space-y-6">
       {/* Page Header */}
@@ -68,10 +71,10 @@ const Dashboard = ({ theme = "dark" }: DashboardProps) => {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
-          <ComplaintsChart />
+          <ComplaintsChart theme={theme} />
         </div>
         <div>
-          <StatusPieChart />
+          <StatusPieChart theme={theme} />
         </div>
       </div>
 
@@ -79,31 +82,28 @@ const Dashboard = ({ theme = "dark" }: DashboardProps) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentActivity theme={theme} />
         
-        {/* Quick Actions */}
+        {/* Quick Actions - Now with white background and faint colors */}
         <div 
-          className="rounded-xl p-6 border"
-          style={{ 
-            backgroundColor: theme === "fancy" ? "#1E1B4B" : theme === "light" ? "#F8FAFC" : "#1E1B4B",
-            borderColor: theme === "light" ? "#E2E8F0" : "#1F2937"
-          }}
+          className="rounded-xl p-6 border bg-white"
+          style={{ borderColor: "#E5E7EB" }}
         >
-          <h3 className="text-lg font-semibold mb-4" style={{ color: theme === "light" ? "#1F2937" : "#FFFFFF" }}>
+          <h3 className="text-lg font-semibold mb-4 text-gray-800">
             Quick Actions
           </h3>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { label: "View Pending", count: 28, bg: "#3B2F0B", iconBg: "#F59E0B" },
-              { label: "High Priority", count: 5, bg: "#3F0D0D", iconBg: "#EF4444" },
-              { label: "Unread Messages", count: 12, bg: "#0C4A6E", iconBg: "#0EA5E9" },
-              { label: "Due Today", count: 3, bg: "#1E1B4B", iconBg: "#6366F1" },
+              { label: "View Pending", count: 28, bg: isLight ? "#FEF3C7" : "#FEF3C7", iconColor: "#D97706", textColor: "#92400E" },
+              { label: "High Priority", count: 5, bg: isLight ? "#FEE2E2" : "#FEE2E2", iconColor: "#EF4444", textColor: "#991B1B" },
+              { label: "Unread Messages", count: 12, bg: isLight ? "#DBEAFE" : "#DBEAFE", iconColor: "#3B82F6", textColor: "#1E40AF" },
+              { label: "Due Today", count: 3, bg: isLight ? "#EDE9FE" : "#EDE9FE", iconColor: "#6366F1", textColor: "#4338CA" },
             ].map((action, index) => (
               <button 
                 key={index}
-                className="p-4 rounded-xl transition-all duration-200 text-left group hover:brightness-110"
+                className="p-4 rounded-xl transition-all duration-200 text-left group hover:brightness-95 border border-gray-200"
                 style={{ backgroundColor: action.bg }}
               >
-                <p className="text-2xl font-bold text-white">{action.count}</p>
-                <p className="text-sm text-white/80">{action.label}</p>
+                <p className="text-2xl font-bold" style={{ color: action.textColor }}>{action.count}</p>
+                <p className="text-sm" style={{ color: action.textColor, opacity: 0.8 }}>{action.label}</p>
               </button>
             ))}
           </div>

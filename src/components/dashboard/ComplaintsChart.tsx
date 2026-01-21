@@ -1,4 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import type { Theme } from "@/pages/Index";
 
 const data = [
   { month: "Jan", complaints: 45 },
@@ -15,6 +16,10 @@ const data = [
   { month: "Dec", complaints: 39 },
 ];
 
+interface ComplaintsChartProps {
+  theme?: Theme;
+}
+
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -29,7 +34,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const ComplaintsChart = () => {
+const ComplaintsChart = ({ theme = "dark" }: ComplaintsChartProps) => {
+  // Softer chart colors based on theme
+  const barColor = theme === "light" ? "#6366F1" : "#7C3AED";
+
   return (
     <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
       <div className="flex items-center justify-between mb-6">
@@ -55,10 +63,10 @@ const ComplaintsChart = () => {
               tickLine={false}
               tick={{ fill: '#6B7280', fontSize: 12 }}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(99, 102, 241, 0.1)' }} />
             <Bar 
               dataKey="complaints" 
-              fill="#1E40AF"
+              fill={barColor}
               radius={[4, 4, 0, 0]}
               maxBarSize={40}
             />
