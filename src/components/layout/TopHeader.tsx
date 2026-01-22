@@ -47,23 +47,43 @@ const TopHeader = ({ theme, onThemeChange }: TopHeaderProps) => {
   const getThemeButtonClass = (t: "dark" | "light" | "fancy") => {
     if (theme === t) {
       if (t === "fancy") {
-        return "bg-gradient-to-r from-purple-600 to-blue-600 text-white";
+        return "bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-md";
       }
-      return "bg-[#7C3AED] text-white";
+      return "bg-gray-800 text-white";
     }
-    return "bg-gray-200 text-gray-700 hover:bg-gray-300";
+    return "bg-gray-100 text-gray-600 hover:bg-gray-200";
   };
 
+  // Theme-based header colors
+  const getHeaderStyles = () => {
+    if (theme === "dark") {
+      return "bg-gray-900 border-gray-700";
+    }
+    if (theme === "fancy") {
+      return "bg-gradient-to-r from-purple-900 to-indigo-900 border-purple-700";
+    }
+    return "bg-white border-gray-200";
+  };
+
+  const getTextStyles = () => {
+    if (theme === "dark" || theme === "fancy") {
+      return { welcome: "text-gray-400", name: "text-white" };
+    }
+    return { welcome: "text-gray-500", name: "text-gray-800" };
+  };
+
+  const textStyles = getTextStyles();
+
   return (
-    <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-gray-200">
+    <header className={`h-16 flex items-center justify-between px-6 border-b transition-colors ${getHeaderStyles()}`}>
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-500">Welcome,</span>
-        <span className="font-semibold text-gray-800">Dr. Rajesh Kumar</span>
+        <span className={`text-sm ${textStyles.welcome}`}>Welcome,</span>
+        <span className={`font-semibold ${textStyles.name}`}>Dr. Rajesh Kumar</span>
       </div>
 
       <div className="flex items-center gap-4">
         {/* Theme Toggle Buttons */}
-        <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg">
+        <div className={`flex items-center gap-1 p-1 rounded-lg ${theme === "dark" ? "bg-gray-800" : theme === "fancy" ? "bg-white/10" : "bg-gray-100"}`}>
           <button
             onClick={() => onThemeChange("dark")}
             className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${getThemeButtonClass("dark")}`}
@@ -90,8 +110,8 @@ const TopHeader = ({ theme, onThemeChange }: TopHeaderProps) => {
         {/* Notifications */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="relative p-2 rounded-lg hover:bg-gray-100 transition-colors">
-              <Bell className="w-5 h-5 text-gray-600" />
+            <button className={`relative p-2 rounded-lg transition-colors ${theme === "dark" || theme === "fancy" ? "hover:bg-white/10" : "hover:bg-gray-100"}`}>
+              <Bell className={`w-5 h-5 ${theme === "dark" || theme === "fancy" ? "text-gray-300" : "text-gray-600"}`} />
               {unreadCount > 0 && (
                 <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-red-500 border-none text-white">
                   {unreadCount}

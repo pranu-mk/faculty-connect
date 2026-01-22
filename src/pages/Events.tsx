@@ -111,11 +111,12 @@ const initialEvents: Event[] = [
   },
 ];
 
+// Softer, faint status colors for professional ERP look
 const statusColors = {
-  "Pending Approval": { bg: "#3B2F0B", text: "#F59E0B", border: "#D97706" },
-  Approved: { bg: "#052E16", text: "#22C55E", border: "#16A34A" },
-  Rejected: { bg: "#3F0D0D", text: "#EF4444", border: "#DC2626" },
-  Completed: { bg: "#1F2937", text: "#9CA3AF", border: "#6B7280" },
+  "Pending Approval": { bg: "#FFFBEB", text: "#B45309", border: "#FCD34D" },
+  Approved: { bg: "#ECFDF5", text: "#047857", border: "#6EE7B7" },
+  Rejected: { bg: "#FEF2F2", text: "#B91C1C", border: "#FCA5A5" },
+  Completed: { bg: "#F3F4F6", text: "#4B5563", border: "#D1D5DB" },
 };
 
 interface EventsProps {
@@ -127,8 +128,9 @@ const Events = ({ theme = "dark" }: EventsProps) => {
   const [eventList, setEventList] = useState(initialEvents);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [historyEvent, setHistoryEvent] = useState<Event | null>(null);
-  const [confirmAction, setConfirmAction] = useState<{ event: Event; action: "approve" | "reject" } | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ event: Event; action: "approve" | "reject" | "revert" } | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [changeDecisionEvent, setChangeDecisionEvent] = useState<Event | null>(null);
 
   const handleApprove = (eventId: string) => {
     setEventList(prev => prev.map(evt => 
@@ -166,6 +168,62 @@ const Events = ({ theme = "dark" }: EventsProps) => {
     setRejectionReason("");
   };
 
+  const handleRevertToPending = (eventId: string) => {
+    setEventList(prev => prev.map(evt => 
+      evt.id === eventId 
+        ? { 
+            ...evt, 
+            status: "Pending Approval" as const,
+            history: [...evt.history, { action: `Reverted to Pending: ${rejectionReason}`, by: "Dr. Rajesh Kumar", date: new Date().toISOString().split('T')[0] }]
+          } 
+        : evt
+    ));
+    toast({
+      title: "Decision Changed",
+      description: "Event has been reverted to pending approval.",
+    });
+    setConfirmAction(null);
+    setChangeDecisionEvent(null);
+    setRejectionReason("");
+  };
+
+  const handleChangeToApproved = (eventId: string) => {
+    setEventList(prev => prev.map(evt => 
+      evt.id === eventId 
+        ? { 
+            ...evt, 
+            status: "Approved" as const,
+            history: [...evt.history, { action: `Decision changed to Approved: ${rejectionReason}`, by: "Dr. Rajesh Kumar", date: new Date().toISOString().split('T')[0] }]
+          } 
+        : evt
+    ));
+    toast({
+      title: "Decision Changed",
+      description: "Event has been approved.",
+    });
+    setChangeDecisionEvent(null);
+    setRejectionReason("");
+  };
+
+  const handleChangeToRejected = (eventId: string) => {
+    setEventList(prev => prev.map(evt => 
+      evt.id === eventId 
+        ? { 
+            ...evt, 
+            status: "Rejected" as const,
+            history: [...evt.history, { action: `Decision changed to Rejected: ${rejectionReason}`, by: "Dr. Rajesh Kumar", date: new Date().toISOString().split('T')[0] }]
+          } 
+        : evt
+    ));
+    toast({
+      title: "Decision Changed",
+      description: "Event has been rejected.",
+      variant: "destructive",
+    });
+    setChangeDecisionEvent(null);
+    setRejectionReason("");
+  };
+
   return (
     <div className="page-enter space-y-6">
       {/* Header */}
@@ -176,21 +234,21 @@ const Events = ({ theme = "dark" }: EventsProps) => {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats - Softer colors */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: "Pending Approval", count: eventList.filter(e => e.status === "Pending Approval").length, bg: "#3B2F0B", text: "#F59E0B" },
-          { label: "Approved", count: eventList.filter(e => e.status === "Approved").length, bg: "#052E16", text: "#22C55E" },
-          { label: "Completed", count: eventList.filter(e => e.status === "Completed").length, bg: "#1F2937", text: "#9CA3AF" },
-          { label: "This Month", count: eventList.length, bg: "#1E1B4B", text: "#6366F1" },
+          { label: "Pending Approval", count: eventList.filter(e => e.status === "Pending Approval").length, bg: "#FFFBEB", text: "#B45309", border: "#FCD34D" },
+          { label: "Approved", count: eventList.filter(e => e.status === "Approved").length, bg: "#ECFDF5", text: "#047857", border: "#6EE7B7" },
+          { label: "Completed", count: eventList.filter(e => e.status === "Completed").length, bg: "#F3F4F6", text: "#4B5563", border: "#D1D5DB" },
+          { label: "This Month", count: eventList.length, bg: "#EEF2FF", text: "#4338CA", border: "#C7D2FE" },
         ].map((stat, index) => (
           <div 
             key={index} 
-            className="rounded-xl p-4 text-center"
-            style={{ backgroundColor: stat.bg }}
+            className="rounded-xl p-4 text-center border"
+            style={{ backgroundColor: stat.bg, borderColor: stat.border }}
           >
             <p className="text-3xl font-bold" style={{ color: stat.text }}>{stat.count}</p>
-            <p className="text-sm text-white/80">{stat.label}</p>
+            <p className="text-sm text-gray-600">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -253,8 +311,8 @@ const Events = ({ theme = "dark" }: EventsProps) => {
                 <div className="flex gap-2">
                   <Button 
                     size="sm" 
-                    variant="outline"
-                    className="border-gray-200"
+                    variant="ghost"
+                    className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                     onClick={() => setSelectedEvent(event)}
                   >
                     <FileText className="w-4 h-4 mr-1" />
@@ -262,8 +320,8 @@ const Events = ({ theme = "dark" }: EventsProps) => {
                   </Button>
                   <Button 
                     size="sm" 
-                    variant="outline"
-                    className="border-gray-200"
+                    variant="ghost"
+                    className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                     onClick={() => setHistoryEvent(event)}
                   >
                     <History className="w-4 h-4 mr-1" />
@@ -274,7 +332,8 @@ const Events = ({ theme = "dark" }: EventsProps) => {
                   <div className="flex gap-2">
                     <Button 
                       size="sm" 
-                      className="bg-green-600 hover:bg-green-700 text-white"
+                      variant="ghost"
+                      className="text-green-600 hover:text-green-700 hover:bg-green-50"
                       onClick={() => setConfirmAction({ event, action: "approve" })}
                     >
                       <Check className="w-4 h-4 mr-1" />
@@ -282,13 +341,25 @@ const Events = ({ theme = "dark" }: EventsProps) => {
                     </Button>
                     <Button 
                       size="sm" 
-                      className="bg-red-600 hover:bg-red-700 text-white"
+                      variant="ghost"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
                       onClick={() => setConfirmAction({ event, action: "reject" })}
                     >
                       <X className="w-4 h-4 mr-1" />
                       Reject
                     </Button>
                   </div>
+                )}
+                {(event.status === "Approved" || event.status === "Rejected") && (
+                  <Button 
+                    size="sm" 
+                    variant="ghost"
+                    className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                    onClick={() => setChangeDecisionEvent(event)}
+                  >
+                    <History className="w-4 h-4 mr-1" />
+                    Change Decision
+                  </Button>
                 )}
               </div>
             </div>
@@ -438,6 +509,71 @@ const Events = ({ theme = "dark" }: EventsProps) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Change Decision Dialog */}
+      <Dialog open={!!changeDecisionEvent} onOpenChange={() => setChangeDecisionEvent(null)}>
+        <DialogContent className="bg-white border-gray-200">
+          <DialogHeader>
+            <DialogTitle className="text-gray-800">Change Decision: {changeDecisionEvent?.title}</DialogTitle>
+          </DialogHeader>
+          {changeDecisionEvent && (
+            <div className="space-y-4 pt-4">
+              <p className="text-sm text-gray-600">
+                Current status: <span className="font-medium">{changeDecisionEvent.status}</span>
+              </p>
+              <div>
+                <label className="text-sm text-gray-500 mb-2 block">Reason for changing decision *</label>
+                <Textarea
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  placeholder="Enter reason for changing the decision..."
+                  className="bg-gray-50 border-gray-200"
+                />
+              </div>
+              <div className="flex flex-col gap-2 pt-2">
+                <Button 
+                  variant="outline"
+                  className="w-full border-amber-200 text-amber-700 hover:bg-amber-50"
+                  onClick={() => handleRevertToPending(changeDecisionEvent.id)}
+                  disabled={!rejectionReason.trim()}
+                >
+                  Revert to Pending Approval
+                </Button>
+                {changeDecisionEvent.status === "Rejected" && (
+                  <Button 
+                    variant="outline"
+                    className="w-full border-green-200 text-green-700 hover:bg-green-50"
+                    onClick={() => handleChangeToApproved(changeDecisionEvent.id)}
+                    disabled={!rejectionReason.trim()}
+                  >
+                    Change to Approved
+                  </Button>
+                )}
+                {changeDecisionEvent.status === "Approved" && (
+                  <Button 
+                    variant="outline"
+                    className="w-full border-red-200 text-red-700 hover:bg-red-50"
+                    onClick={() => handleChangeToRejected(changeDecisionEvent.id)}
+                    disabled={!rejectionReason.trim()}
+                  >
+                    Change to Rejected
+                  </Button>
+                )}
+                <Button 
+                  variant="ghost"
+                  className="w-full text-gray-500"
+                  onClick={() => {
+                    setChangeDecisionEvent(null);
+                    setRejectionReason("");
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
