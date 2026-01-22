@@ -36,15 +36,21 @@ const Index = () => {
     }
   };
 
-  // Theme-based main content background
+  // Theme-based classes for the entire app
+  const getAppContainerClass = () => {
+    if (theme === "dark") return "bg-gray-900";
+    if (theme === "fancy") return "bg-gradient-to-br from-purple-950 via-indigo-950 to-slate-900";
+    return "bg-gray-50";
+  };
+
   const getMainBgClass = () => {
     if (theme === "dark") return "bg-gray-800";
-    if (theme === "fancy") return "bg-gradient-to-br from-purple-900/20 to-indigo-900/20 bg-gray-100";
+    if (theme === "fancy") return "bg-purple-950/50";
     return "bg-white";
   };
 
   return (
-    <div className={`min-h-screen flex ${theme === "dark" ? "bg-gray-900" : theme === "fancy" ? "bg-gray-100" : "bg-white"}`}>
+    <div className={`min-h-screen flex transition-colors duration-300 ${getAppContainerClass()}`} data-theme={theme}>
       <Sidebar 
         activeTab={activeTab} 
         onTabChange={setActiveTab}
@@ -52,7 +58,7 @@ const Index = () => {
       />
       <div className="flex-1 ml-[250px] transition-all duration-300" style={{ marginLeft: "250px" }}>
         <TopHeader theme={theme} onThemeChange={setTheme} />
-        <main className={`p-6 min-h-[calc(100vh-64px)] transition-colors ${getMainBgClass()}`}>
+        <main className={`p-6 min-h-[calc(100vh-64px)] transition-colors duration-300 ${getMainBgClass()}`}>
           {renderContent()}
         </main>
       </div>
