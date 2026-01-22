@@ -123,6 +123,14 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
   const [replyMessage, setReplyMessage] = useState("");
   const { toast } = useToast();
 
+  const isDark = theme === "dark";
+  const isFancy = theme === "fancy";
+  
+  const cardBg = isDark || isFancy ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200";
+  const textPrimary = isDark || isFancy ? "text-gray-100" : "text-gray-800";
+  const textSecondary = isDark || isFancy ? "text-gray-400" : "text-gray-500";
+  const inputClass = isDark || isFancy ? "bg-gray-700 border-gray-600 text-gray-100" : "bg-gray-50 border-gray-200";
+
   const handleCreateTicket = () => {
     toast({
       title: "Ticket Created",
@@ -168,8 +176,8 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Helpdesk Tickets</h1>
-          <p className="text-gray-500 mt-1">Faculty technical and administrative support</p>
+          <h1 className={`text-2xl font-bold ${textPrimary}`}>Helpdesk Tickets</h1>
+          <p className={`mt-1 ${textSecondary}`}>Faculty technical and administrative support</p>
         </div>
         <Dialog open={isNewTicketOpen} onOpenChange={setIsNewTicketOpen}>
           <DialogTrigger asChild>
@@ -178,18 +186,18 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
               New Ticket
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-white border-gray-200">
+          <DialogContent className={isDark || isFancy ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}>
             <DialogHeader>
-              <DialogTitle className="text-gray-800">Create Support Ticket</DialogTitle>
+              <DialogTitle className={textPrimary}>Create Support Ticket</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div>
-                <label className="text-sm text-gray-500 mb-2 block">Issue Type</label>
+                <label className={`text-sm mb-2 block ${textSecondary}`}>Issue Type</label>
                 <Select>
-                  <SelectTrigger className="bg-gray-50 border-gray-200">
+                  <SelectTrigger className={inputClass}>
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border-gray-200">
+                  <SelectContent className={cardBg}>
                     <SelectItem value="technical">Technical</SelectItem>
                     <SelectItem value="administrative">Administrative</SelectItem>
                     <SelectItem value="resource">Resource</SelectItem>
@@ -198,12 +206,12 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
                 </Select>
               </div>
               <div>
-                <label className="text-sm text-gray-500 mb-2 block">Priority</label>
+                <label className={`text-sm mb-2 block ${textSecondary}`}>Priority</label>
                 <Select>
-                  <SelectTrigger className="bg-gray-50 border-gray-200">
+                  <SelectTrigger className={inputClass}>
                     <SelectValue placeholder="Select priority" />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border-gray-200">
+                  <SelectContent className={cardBg}>
                     <SelectItem value="low">Low</SelectItem>
                     <SelectItem value="medium">Medium</SelectItem>
                     <SelectItem value="high">High</SelectItem>
@@ -211,18 +219,18 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
                 </Select>
               </div>
               <div>
-                <label className="text-sm text-gray-500 mb-2 block">Subject</label>
-                <Input placeholder="Brief description of the issue" className="bg-gray-50 border-gray-200" />
+                <label className={`text-sm mb-2 block ${textSecondary}`}>Subject</label>
+                <Input placeholder="Brief description of the issue" className={inputClass} />
               </div>
               <div>
-                <label className="text-sm text-gray-500 mb-2 block">Description</label>
+                <label className={`text-sm mb-2 block ${textSecondary}`}>Description</label>
                 <Textarea 
                   placeholder="Provide detailed information about your issue..."
-                  className="bg-gray-50 border-gray-200 min-h-[120px] resize-none"
+                  className={`min-h-[120px] resize-none ${inputClass}`}
                 />
               </div>
               <div className="flex gap-3 pt-2">
-                <Button variant="outline" className="flex-1 border-gray-200" onClick={() => setIsNewTicketOpen(false)}>
+                <Button variant="outline" className={`flex-1 ${isDark || isFancy ? "border-gray-600" : "border-gray-200"}`} onClick={() => setIsNewTicketOpen(false)}>
                   Cancel
                 </Button>
                 <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white" onClick={handleCreateTicket}>
@@ -235,14 +243,14 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
+      <div className={`rounded-xl p-4 shadow-sm ${cardBg}`}>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${textSecondary}`} />
           <Input
             placeholder="Search tickets..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 bg-gray-50 border-gray-200"
+            className={`pl-10 ${inputClass}`}
           />
         </div>
       </div>
@@ -252,13 +260,13 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
         {filteredTickets.map((ticket, index) => (
           <div 
             key={ticket.id}
-            className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:border-blue-300 transition-colors animate-fade-in"
+            className={`rounded-xl shadow-sm p-5 transition-colors animate-fade-in ${cardBg} ${isDark || isFancy ? "hover:border-blue-500" : "hover:border-blue-300"}`}
             style={{ animationDelay: `${index * 50}ms` }}
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-sm font-mono text-blue-600">{ticket.id}</span>
+                  <span className={`text-sm font-mono ${isDark || isFancy ? "text-blue-400" : "text-blue-600"}`}>{ticket.id}</span>
                   <Badge 
                     variant="outline" 
                     style={{
@@ -280,21 +288,21 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
                     {ticket.status}
                   </Badge>
                 </div>
-                <h3 className="font-medium text-gray-800 mb-1">{ticket.subject}</h3>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  <span className="px-2 py-0.5 rounded bg-gray-100">{ticket.issueType}</span>
+                <h3 className={`font-medium mb-1 ${textPrimary}`}>{ticket.subject}</h3>
+                <div className={`flex items-center gap-4 text-sm ${textSecondary}`}>
+                  <span className={`px-2 py-0.5 rounded ${isDark || isFancy ? "bg-gray-700" : "bg-gray-100"}`}>{ticket.issueType}</span>
                   <span>Created: {ticket.createdDate}</span>
                 </div>
               </div>
               <div className="flex flex-col items-end gap-2">
-                <div className="flex items-center gap-1 text-xs text-gray-400">
+                <div className={`flex items-center gap-1 text-xs ${textSecondary}`}>
                   <Clock className="w-3 h-3" />
                   {ticket.lastReply}
                 </div>
                 <Button 
                   size="sm" 
                   variant="ghost"
-                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-50/50"
+                  className={isDark || isFancy ? "text-blue-400 hover:text-blue-300 hover:bg-blue-900/30" : "text-blue-600 hover:text-blue-700 hover:bg-blue-50/50"}
                   onClick={() => setReplyTicket(ticket)}
                 >
                   <MessageSquare className="w-4 h-4 mr-1" />
@@ -308,35 +316,39 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
 
       {/* Reply Modal */}
       <Dialog open={!!replyTicket} onOpenChange={() => setReplyTicket(null)}>
-        <DialogContent className="bg-white border-gray-200 max-w-2xl">
+        <DialogContent className={`max-w-2xl ${isDark || isFancy ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}`}>
           <DialogHeader>
-            <DialogTitle className="text-gray-800">
+            <DialogTitle className={textPrimary}>
               Reply to {replyTicket?.id}: {replyTicket?.subject}
             </DialogTitle>
           </DialogHeader>
           {replyTicket && (
             <div className="space-y-4 pt-4">
               {/* Existing Replies */}
-              <div className="max-h-60 overflow-y-auto space-y-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <div className={`max-h-60 overflow-y-auto space-y-3 border rounded-lg p-4 ${isDark || isFancy ? "border-gray-600 bg-gray-700" : "border-gray-200 bg-gray-50"}`}>
                 {replyTicket.replies.length === 0 ? (
-                  <p className="text-sm text-gray-400 text-center py-4">No previous replies</p>
+                  <p className={`text-sm text-center py-4 ${textSecondary}`}>No previous replies</p>
                 ) : (
                   replyTicket.replies.map((reply) => (
                     <div 
                       key={reply.id} 
                       className={`p-3 rounded-lg ${
-                        reply.sender === "faculty" ? "bg-blue-50 ml-8" : "bg-gray-100 mr-8"
+                        reply.sender === "faculty" 
+                          ? (isDark || isFancy ? "bg-blue-900/30 ml-8" : "bg-blue-50 ml-8")
+                          : (isDark || isFancy ? "bg-gray-600 mr-8" : "bg-gray-100 mr-8")
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`text-xs font-medium ${
-                          reply.sender === "faculty" ? "text-blue-600" : "text-gray-600"
+                          reply.sender === "faculty" 
+                            ? (isDark || isFancy ? "text-blue-400" : "text-blue-600")
+                            : textSecondary
                         }`}>
                           {reply.sender === "faculty" ? "You" : "Admin"}
                         </span>
-                        <span className="text-xs text-gray-400">{reply.time}</span>
+                        <span className={`text-xs ${textSecondary}`}>{reply.time}</span>
                       </div>
-                      <p className="text-sm text-gray-700">{reply.message}</p>
+                      <p className={`text-sm ${textPrimary}`}>{reply.message}</p>
                     </div>
                   ))
                 )}
@@ -344,19 +356,19 @@ const Helpdesk = ({ theme = "dark" }: HelpdeskProps) => {
               
               {/* New Reply */}
               <div>
-                <label className="text-sm text-gray-500 mb-2 block">Your Reply</label>
+                <label className={`text-sm mb-2 block ${textSecondary}`}>Your Reply</label>
                 <Textarea 
                   placeholder="Type your reply here..."
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
-                  className="bg-gray-50 border-gray-200 min-h-[100px] resize-none"
+                  className={`min-h-[100px] resize-none ${inputClass}`}
                 />
               </div>
               
               <div className="flex gap-3">
                 <Button 
                   variant="outline" 
-                  className="flex-1 border-gray-200"
+                  className={`flex-1 ${isDark || isFancy ? "border-gray-600" : "border-gray-200"}`}
                   onClick={() => setReplyTicket(null)}
                 >
                   Cancel
