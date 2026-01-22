@@ -209,23 +209,21 @@ const Complaints = ({ theme = "dark" }: ComplaintsProps) => {
                     </Badge>
                   </td>
                   <td className="px-4 py-4">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-8 px-2 border-gray-200 hover:bg-blue-50 text-blue-600 hover:text-blue-700"
+                    <div className="flex items-center gap-1">
+                      <button
+                        className="p-2 text-gray-500 hover:text-blue-600 hover:bg-gray-100 rounded-md transition-colors"
                         onClick={() => setSelectedComplaint(complaint)}
+                        title="View Details"
                       >
                         <Eye className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-8 px-2 border-gray-200 hover:bg-purple-50 text-purple-600 hover:text-purple-700"
+                      </button>
+                      <button
+                        className="p-2 text-gray-500 hover:text-purple-600 hover:bg-gray-100 rounded-md transition-colors"
                         onClick={() => setEditingComplaint(complaint)}
+                        title="Edit Complaint"
                       >
                         <Edit className="w-4 h-4" />
-                      </Button>
+                      </button>
                     </div>
                   </td>
                 </tr>

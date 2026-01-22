@@ -254,14 +254,15 @@ const Profile = ({ theme = "dark" }: ProfileProps) => {
           {isEditing ? (
             <>
               <Button 
-                variant="outline" 
-                className="border-gray-200 text-gray-700"
+                variant="ghost" 
+                className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
                 onClick={() => setIsEditing(false)}
               >
                 Cancel
               </Button>
               <Button 
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                variant="ghost"
+                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                 onClick={handleSave}
               >
                 <Save className="w-4 h-4 mr-2" />
@@ -270,8 +271,8 @@ const Profile = ({ theme = "dark" }: ProfileProps) => {
             </>
           ) : (
             <Button 
-              variant="outline" 
-              className="border-gray-200 text-gray-700"
+              variant="ghost" 
+              className="text-gray-600 hover:text-gray-800 hover:bg-gray-100"
               onClick={() => setIsEditing(true)}
             >
               Edit Profile
@@ -280,7 +281,7 @@ const Profile = ({ theme = "dark" }: ProfileProps) => {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="border-gray-200 text-gray-700">
+              <Button variant="ghost" className="text-gray-600 hover:text-gray-800 hover:bg-gray-100">
                 <Lock className="w-4 h-4 mr-2" />
                 Change Password
               </Button>

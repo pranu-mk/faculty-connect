@@ -41,11 +41,12 @@ const initialNotices: Notice[] = [
   { id: "NOT-005", title: "Research Grant Applications", description: "Faculty members interested in applying for research grants may submit their proposals by the end of this month.", issuedBy: "Research Cell", department: "Administration", date: "2024-01-10", type: "College", hasAttachment: true, category: "Research", visibility: "Faculty" },
 ];
 
+// Softer, faint type colors for professional ERP look
 const typeColors = {
-  College: { bg: "#1E1B4B", text: "#6366F1", border: "#4F46E5" },
-  Department: { bg: "#0C4A6E", text: "#0EA5E9", border: "#0284C7" },
-  Exam: { bg: "#3B2F0B", text: "#F59E0B", border: "#D97706" },
-  Meeting: { bg: "#052E16", text: "#22C55E", border: "#16A34A" },
+  College: { bg: "#EEF2FF", text: "#4338CA", border: "#C7D2FE" },
+  Department: { bg: "#ECFEFF", text: "#0891B2", border: "#A5F3FC" },
+  Exam: { bg: "#FFFBEB", text: "#B45309", border: "#FCD34D" },
+  Meeting: { bg: "#ECFDF5", text: "#047857", border: "#6EE7B7" },
 };
 
 interface NoticesProps {
@@ -244,7 +245,7 @@ const Notices = ({ theme = "dark" }: NoticesProps) => {
                 key={type}
                 size="sm"
                 variant="ghost"
-                className={`${typeFilter === type ? "bg-blue-100 text-blue-600" : "text-gray-600"}`}
+                className={`${typeFilter === type ? "bg-gray-200 text-gray-800" : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"}`}
                 onClick={() => setTypeFilter(type)}
               >
                 {type === "all" ? "All" : type}
@@ -306,7 +307,25 @@ const Notices = ({ theme = "dark" }: NoticesProps) => {
               </div>
               
               {notice.hasAttachment && (
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                  onClick={() => {
+                    // Create a dummy file download
+                    const element = document.createElement("a");
+                    const file = new Blob([`Notice: ${notice.title}\n\n${notice.description}\n\nIssued by: ${notice.issuedBy}\nDepartment: ${notice.department}\nDate: ${notice.date}`], { type: 'text/plain' });
+                    element.href = URL.createObjectURL(file);
+                    element.download = `${notice.id}-${notice.title.replace(/\s+/g, '-')}.txt`;
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                    toast({
+                      title: "Download Started",
+                      description: `Downloading ${notice.title}...`,
+                    });
+                  }}
+                >
                   <Download className="w-4 h-4 mr-1" />
                   Download
                 </Button>
